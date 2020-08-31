@@ -1,30 +1,21 @@
 package dataStores;
 
 import java.util.*;
-//import java.io.*;
-//import java.nio.file.Files;
+import java.io.*;
 import java.awt.*;
 
 public class DataStores{
-    private ArrayList<Record> records = new ArrayList<Record>();
+    private String filename = "Records";
+    private ArrayList<Record> records;
     Scanner scan = new Scanner(System.in);
-
     public static void main(String[] args) {
         DataStores dt = new DataStores();
-        /* File records = new File("Records");
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(records));
-            if(br.readLine()!=""){
-                Files.readAllLines(records);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        */
         System.out.println("Data Stores Inc.");
+        dt.records = dt.readFile();
         dt.viewMenu();
         boolean flag = true;
         do{
+            System.out.print("Enter option number: ");
             int opt = dt.scan.nextInt();
             switch(opt){
                 case 1:
@@ -55,10 +46,10 @@ public class DataStores{
                 default:
                     Toolkit.getDefaultToolkit().beep();
                     System.out.println("Enter correct option!!");
-            }
-            System.out.println("Enter option number: ");   
+            }   
         }while(flag);
         dt.scan.close();
+        dt.writeFile();
     }
     void createNewRecord(){
         Record rec = new Record(askKey(),askValue());
@@ -71,7 +62,7 @@ public class DataStores{
     boolean deleteRecord(){
         String k = askKey();
         for(Record record : records){
-            if(record.getkey()==k){
+            if(record.getKey().equals(k)){
                 records.remove(record);
                 return true;
             }
@@ -91,11 +82,11 @@ public class DataStores{
     void updateRecord(){
         String k = askKey();
         for(Record record : records){
-            if(record.getkey()==k){
+            if(record.getKey().equals(k)){
                 System.out.println(record);
                 System.out.println("Would you like to update(yes/no): ");
                 String c = scan.next();
-                if(c=="yes"){
+                if(c.equals("yes")){
                     String v = askValue();
                     record.setValue(v);
                 }else{
@@ -107,7 +98,7 @@ public class DataStores{
     void displayRecord(){
         String k = askKey();
         for(Record record: records){
-            if(record.getkey()==k){
+            if(record.getKey().equals(k)){
                 System.out.println(record);
             }
         }
@@ -118,7 +109,20 @@ public class DataStores{
         }
     }
     void viewMenu(){
-        System.out.print("Menu:\n1.Create a new input.\n2.Delete a row of data.\n3.Update an existing row.\n"
-            +"4.Display a record.\n5.Display all record.\n6.Exit.\nEnter option number: ");
+        System.out.println("Menu:\n1.Create a new input.\n2.Delete a row of data.\n3.Update an existing row.\n"
+            +"4.Display a record.\n5.Display all record.\n6.Exit.\n7.View Menu.");
+    }
+    ArrayList<Record> readFile(){
+
+        return new ArrayList<Record>();
+    }
+    void writeFile(){
+        try{
+            BufferedWriter bw = new BufferedWriter(new FileWriter("records"));
+            bw.write(records.toString());
+            bw.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
